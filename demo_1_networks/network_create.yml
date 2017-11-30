@@ -1,0 +1,20 @@
+---
+- hosts: localhost
+  vars:
+    ansible_python_interpreter: /home/user/shade/bin/python2.7
+  tasks:
+    - name: Create a network
+      os_network:
+        name: network_demo
+        external: false
+        state: present
+
+    - name: Create a subnet
+      os_subnet:
+        name: subnet_demo
+        network_name: network_demo
+        cidr: 10.0.0.0/24
+        dns_nameservers:
+          - 8.8.4.4
+          - 8.8.8.8
+        state: present

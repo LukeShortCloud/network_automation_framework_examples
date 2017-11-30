@@ -1,0 +1,9 @@
+---
+- hosts: localhost
+  vars:
+    ansible_python_interpreter: /home/user/shade/bin/python2.7
+  tasks:
+    - name: Deploy an existing Heat stack
+      os_stack:
+        name: all-in-one
+        template: heat_stack_all-in-one.yml

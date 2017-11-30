@@ -1,0 +1,14 @@
+---
+- hosts: localhost
+  vars:
+    ansible_python_interpreter: /home/user/shade/bin/python2.7
+  tasks:
+    - name: Delete the subnet
+      os_subnet:
+        name: subnet_demo
+        state: absent
+
+    - name: Delete the network
+      os_network:
+        name: network_demo
+        state: absent

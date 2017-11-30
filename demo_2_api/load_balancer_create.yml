@@ -1,0 +1,37 @@
+---
+- hosts: localhost
+  vars:
+    ansible_python_interpreter: /home/user/shade/bin/python2.7
+  tasks:
+    - name: Create a load balancer
+      shell: neutron lbaas-loadbalancer-create --name demo_load_balancer subnet_demo --format json
+      register: lb_create
+
+    - debug:
+        var: "lb_create"
+
+    - set_fact:
+        load_balancer_info: "{{ lb_create['stdout'] | from_json }}"
+
+    - debug:
+        var: "load_balancer_info"
+
+    - name: Create a authentication token from Keystone
+      os_auth:
+      register: os_auth_output
+
+    - set_fact:
+        os_token: "{{ os_auth_output['ansible_facts']['auth_token'] }}"
+
+    - debug:
+        var: os_token
+
+    - name: View the load balancer
+      uri:
+        url: "http://192.168.122.159:9696/v2.0/lbaas/loadbalancers/{{ load_balancer_info['id'] }}"
+        headers:
+          X-Auth-Token: "{{ os_token }}"
+      register: view_load_balancer
+
+    - debug:
+        var: view_load_balancer
